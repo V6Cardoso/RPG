@@ -127,22 +127,6 @@ footer {
     border-color: black;
 }
 
-#config-confirm-button {
-    width: 200px;
-    background-color: green;
-    color: white;
-    border-radius: 6px;
-    border-color: transparent;
-}
-
-#config-restore-button {
-    width: 200px;
-    background-color: darkblue;
-    color: white;
-    border-radius: 6px;
-    border-color: transparent;
-}
-
 #search-input {
     width: 400px;
 }
