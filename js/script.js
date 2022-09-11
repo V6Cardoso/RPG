@@ -19,12 +19,14 @@ function darkMode() {
         localStorage.setItem('darkMode', this.dark);
     }
 
-    const textLightColor = '#d3d3d3';
+    const lightColor = '#d3d3d3';
     const textDarkColor = 'black'
+    const grayishColor = 'gray';
 
     const box = document.getElementsByClassName('box');
     const fellowshipImage = document.getElementById('fellowshipImage');
     const text = document.getElementsByClassName('text-name');
+    const image = document.getElementsByClassName('image');
         
 
     if (this.dark) {
@@ -32,7 +34,10 @@ function darkMode() {
             box[i].style.backgroundColor = '#444';
 
         for (let i = 0; i < text.length; i++)
-            text[i].style.color = textLightColor;
+            text[i].style.color = lightColor;
+        
+        for (let i = 0; i < image.length; i++)
+            image[i].style['border-color'] = lightColor;
         
         if (fellowshipImage != null) {
             fellowshipImage.src = 'img/fellowship-gray.png';
@@ -45,6 +50,9 @@ function darkMode() {
 
         for (let i = 0; i < text.length; i++)
             text[i].style.color = textDarkColor;
+        
+        for (let i = 0; i < image.length; i++)
+            image[i].style['border-color'] = grayishColor;
 
         if (fellowshipImage != null) {
             fellowshipImage.src = 'img/fellowship.png';
