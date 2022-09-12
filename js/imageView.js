@@ -1,5 +1,5 @@
 function getImage() {
-    let imageId = localStorage.getItem("selectedImageId");
+    let imageId = new URL(location.href).searchParams.get('id');
 
     let imagesJSON = localStorage.getItem('imagesJSON');
     let images = JSON.parse(imagesJSON);
