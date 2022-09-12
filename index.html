@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/script.js" defer></script>
+    <script src="js/index.js" defer></script>
   </head>
   <body>
 
@@ -29,10 +30,10 @@
         <h2 class="text-name">Qual será a aventura de hoje?</h2>
       </div>
       <div class="text-center">
-        <input id="search-input" class="input botton-border" type="text" placeholder="Digite aqui a aventura">
+        <input id="search-input" class="input botton-border" type="text" placeholder="Digite aqui a aventura" onkeyup="disableButton()">
       </div>
       <div class="text-center">
-        <button id="search-button" class="search-button">Confirmar</button>
+        <button id="search-button" class="custom-button" onclick="populate(getElementById('search-input').value)" hidden>Confirmar</button>
       </div>
     </div>
 

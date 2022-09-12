@@ -1,7 +1,7 @@
 let dark = false;
 
 window.onload = function() {
-    value = localStorage.getItem("darkMode",this.dark);
+    value = localStorage.getItem("darkMode");
     this.dark = (value === 'true');
 
     if (document.getElementById('darkmode') != null)
@@ -12,7 +12,6 @@ window.onload = function() {
 
 
 function darkMode() {
-    
 
     if (document.getElementById('darkmode') != null) {
         this.dark = document.getElementById('darkmode').checked;
@@ -59,5 +58,7 @@ function darkMode() {
         }
     }
 }
+
+
 
 
