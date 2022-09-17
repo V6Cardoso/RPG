@@ -16,6 +16,8 @@ async function populate(text) {
     if (!apiKey || !pseId)
         document.location.href = 'config.html';
 
+    if (!text.includes('landscape'))
+        text += ' landscape';
     const requestURL = baseURL + 'key=' + apiKey + '&cx=' + pseId + '&searchType=image&num=1&imgSize=xxlarge&q=' + encodeURIComponent(text);
     const request = new Request(requestURL);
     
