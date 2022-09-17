@@ -7,6 +7,7 @@ function getImage() {
     let image = images.find(x => x.id == imageId).website;
 
     document.getElementById('image-full').src = image;
+    document.getElementById('image-full-link').href = image;
  }
 
  getImage();
