@@ -16,7 +16,7 @@ async function populate(text) {
     if (!apiKey || !pseId)
         document.location.href = 'config.html';
 
-    const requestURL = baseURL + 'key=' + apiKey + '&cx=' + pseId + '&searchType=image&num=1&q=' + encodeURIComponent(text);
+    const requestURL = baseURL + 'key=' + apiKey + '&cx=' + pseId + '&searchType=image&num=1&imgSize=xxlarge&q=' + encodeURIComponent(text);
     const request = new Request(requestURL);
     
     const response = await fetch(request);
@@ -31,7 +31,7 @@ function populateSource(obj) {
     if (images == null)
         images = [];
 
-    let newObj = { id: images.length, website: obj.items[0].link };
+    let newObj = { id: images.length, website: obj.items[0].link.replace(/^(.+?\.(png|jpg|svg|gif|bmp)\x2F).*$/i, '$1') };//\x2F -> forward slash
 
     images.push(newObj);
     console.log(images);
