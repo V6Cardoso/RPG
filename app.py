@@ -42,15 +42,15 @@ def login():
     if request.method == "POST":
 
         if not request.form.get("username"):
-            return apology("faltando usuário", 403)
+            return apology("informar usuário", 403)
 
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("informar senha", 403)
 
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
 
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("invalid username and/or password", 403)
+            return apology("usuário ou senha inválidos", 403)
 
         session["user_id"] = rows[0]["id"]
         return redirect("/")
@@ -70,13 +70,13 @@ def register():
     if request.method == "POST":
 
         if not request.form.get("username"):
-            return apology("faltando usuário", 400)
+            return apology("informar usuário", 400)
 
         elif not request.form.get("password"):
-            return apology("faltando senha", 400)
+            return apology("informar senha", 400)
 
         elif not request.form.get("confirmation"):
-            return apology("faltando senha de novo", 400)
+            return apology("informar senha novamente", 400)
 
         if request.form.get("password") != request.form.get("confirmation"):
             return apology("senhas devem ser iguais", 400)
