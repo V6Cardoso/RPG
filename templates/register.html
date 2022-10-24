@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Registrar-se
+{% endblock %}
+
+{% block main %}
+    <form action="/register" method="post" class="relative-center">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto input botton-border" id="username" name="username" placeholder="Usuário" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto input botton-border" id="password" name="password" placeholder="Senha" type="password">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto input botton-border" id="confirmation" name="confirmation" placeholder="Confirmação da senha" type="password">
+        </div>
+        <div class="mb-3 text-center">
+            <button class="btn btn-primary custom-button" type="submit">Registrar-se</button>
+        </div>
+    </form>
+{% endblock %}

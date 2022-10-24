@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block main %}
+    <form action="/login" method="post" class="relative-center">
+        <div class="mb-3 text-center">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto input botton-border" id="username" name="username" placeholder="Usuário" type="text">
+        </div>
+        <div class="mb-3 text-center">
+            <input class="form-control mx-auto w-auto input botton-border" id="password" name="password" placeholder="Senha" type="password">
+        </div>
+        <div class="mb-3 text-center">
+            <button class="btn btn-primary custom-button" type="submit">Entrar</button>
+        </div>
+    </form>
+{% endblock %}
