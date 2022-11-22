@@ -5,7 +5,7 @@ function buildImages() {
     images.forEach(element => {
         let link = document.createElement('a');
         link.classList.add('image-link');
-        link.setAttribute('href', 'imageView.html?id=' + element.id);
+        link.setAttribute('href', 'imageView?id=' + element.id);
 
         let image = document.createElement('img');
         image.classList.add('image');

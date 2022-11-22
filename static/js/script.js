@@ -39,7 +39,7 @@ function darkMode() {
             image[i].style['border-color'] = lightColor;
         
         if (fellowshipImage != null) {
-            fellowshipImage.src = 'img/fellowship-gray.png';
+            fellowshipImage.src = '/static/img/fellowship-gray.png';
         }
         
     }
@@ -54,7 +54,7 @@ function darkMode() {
             image[i].style['border-color'] = grayishColor;
 
         if (fellowshipImage != null) {
-            fellowshipImage.src = 'img/fellowship.png';
+            fellowshipImage.src = '/static/img/fellowship.png';
         }
     }
 }

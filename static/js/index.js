@@ -14,7 +14,7 @@ async function populate(text) {
 
     //check if keys were set
     if (!apiKey || !pseId)
-        document.location.href = 'config.html';
+        document.location.href = 'config';
 
     if (!text.includes('landscape'))
         text += ' landscape';
@@ -41,5 +41,5 @@ function populateSource(obj) {
     console.log(imagesNewJSON);
     localStorage.setItem('imagesJSON', imagesNewJSON);
 
-    document.location.href = 'imageView.html?id=' + newObj.id;
+    document.location.href = 'imageView?id=' + newObj.id;
 }
