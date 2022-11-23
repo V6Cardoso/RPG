@@ -60,9 +60,12 @@ def adventure():
 def config():
     return render_template("config.html", user = user)
 
-@app.route("/collection")
+@app.route("/collection", methods=["GET", "POST"])
 @login_required
 def collection():
+    if request.method == "POST":
+        db.execute("DELETE FROM users_images WHERE user_id = ? AND id_container = ?", (session["user_id"], request.form.get("id")))
+        con.commit()
     db.execute("SELECT * FROM users_images WHERE user_id = ?", [session["user_id"]])
     rows = db.fetchall()
     return render_template("collection.html", user = user, images=rows)
@@ -78,12 +81,16 @@ def imageView():
         if len(rows) == 0:
             db.execute("INSERT INTO users_images(user_id, images) VALUES(?, ?)", (session["user_id"], request.form.get("image")))
             con.commit()
+        return redirect('/collection')
     else:
-        imageId = request.args.get('id')
-        db.execute("SELECT * FROM users_images WHERE id_container = ? AND user_id = ?", (imageId, session["user_id"]))
-        image = db.fetchone()
-        if image == None or image[2] == None:
-            return apology("imagem não encontrada", 400)
+        if request.args.get('link'):
+            image = ['','', request.args.get('link')]
+        else:
+            imageId = request.args.get('id')
+            db.execute("SELECT * FROM users_images WHERE id_container = ? AND user_id = ?", (imageId, session["user_id"]))
+            image = db.fetchone()
+            if image == None or image[2] == None:
+                return apology("imagem não encontrada", 400)
         return render_template("imageView.html", user = user, image=image)
 
 @app.route("/login", methods=["GET", "POST"])

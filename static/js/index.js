@@ -41,5 +41,5 @@ function populateSource(obj) {
     console.log(imagesNewJSON);
     localStorage.setItem('imagesJSON', imagesNewJSON);
 
-    document.location.href = 'imageView?id=' + newObj.id;
+    document.location.href = 'imageView?link=' + newObj.website;
 }

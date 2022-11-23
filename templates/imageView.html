@@ -5,8 +5,6 @@
 {% endblock %}
 
 {% block head %}
-  <script src="/static/js/imageView.js" defer></script>
-  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script>
     function sendImage() {
       const image = document.getElementById("image-full").src;
@@ -27,11 +25,10 @@
 {% endblock %}
 
 {% block main %}
-  <div class="d-flex justify-content-around align-items-center">
-    <!-- <form action="/imageView" method="post" class="text-center">
-      <button type="submit" class="custom-button"><i class="bi bi-download"></i> Salvar</button>
-    </form> -->
-    <button onclick="sendImage();" class="custom-button"><i class="bi bi-download"></i> Salvar</button>
+  <div class="d-flex justify-content-around align-items-center imageView">
+    {% if image[0] == '' %}
+      <button onclick="sendImage();" class="custom-button"><i class="bi bi-download"></i> Salvar</button>
+    {% endif %}
     <div id="image-container" class="text-center">
       <a id="image-full-link" href={{image[2]}}>
         <img id="image-full" src={{image[2]}}>

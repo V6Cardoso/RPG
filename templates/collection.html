@@ -6,13 +6,35 @@
 {% endblock %}
 
 {% block head %}
-  <script src="/static/js/collection.js" defer></script>
+<script>
+  function deleteImage() {
+      event.preventDefault();
+      event.stopPropagation();
+      $.ajax({
+          url: '{{url_for("collection")}}',
+          type: 'POST',
+          data: {
+              id: event.currentTarget.dataset.id
+          },
+          success: function (response) {
+            window.location.replace('collection');
+          },
+          error: function (response) {
+          }
+      });
+  }
+</script>
 {% endblock %}
 
 {% block main %}
   <div id="img-collection" class="img-collection overflow-style text-center row d-flex justify-content-around align-items-center scrollbar-primary">
     {% for image in images %}
-      <a class="image-link" href="imageView?id={{image[0]}}"><img class="image" src={{image[2]}}></a>
+      <a class="image-link" onclick="{{url_for('collection')}}" href="imageView?id={{image[0]}}">
+        <div style="position:relative;">
+          <button type="button" onclick="deleteImage()" data-id="{{image[0]}}" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
+          <img class="image" src={{image[2]}}>
+        </div>
+      </a>
     {% endfor %}
   </div>
 {% endblock %}
