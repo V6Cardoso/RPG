@@ -10,4 +10,4 @@ function getImage() {
     document.getElementById('image-full-link').href = image;
  }
 
- getImage();
+ //getImage();

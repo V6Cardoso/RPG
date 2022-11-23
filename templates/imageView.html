@@ -6,12 +6,36 @@
 
 {% block head %}
   <script src="/static/js/imageView.js" defer></script>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script>
+    function sendImage() {
+      const image = document.getElementById("image-full").src;
+          $.ajax({
+              url: '{{url_for("imageView")}}',
+              type: 'POST',
+              data: {
+                  image: image
+              },
+              success: function (response) {
+                window.location.replace('collection');
+              },
+              error: function (response) {
+              }
+          });
+   }
+  </script>
 {% endblock %}
 
 {% block main %}
-  <div id="image-container" class="text-center">
-    <a id="image-full-link">
-      <img id="image-full">
-    </a>
+  <div class="d-flex justify-content-around align-items-center">
+    <!-- <form action="/imageView" method="post" class="text-center">
+      <button type="submit" class="custom-button"><i class="bi bi-download"></i> Salvar</button>
+    </form> -->
+    <button onclick="sendImage();" class="custom-button"><i class="bi bi-download"></i> Salvar</button>
+    <div id="image-container" class="text-center">
+      <a id="image-full-link" href={{image[2]}}>
+        <img id="image-full" src={{image[2]}}>
+      </a>
+    </div>
   </div>
 {% endblock %}

@@ -16,4 +16,4 @@ function buildImages() {
     });
 }
 
-buildImages();
+//buildImages();
