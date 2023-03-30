@@ -4,6 +4,10 @@
     Aventura
 {% endblock %}
 
+{% block head %}
+  <script src="/static/js/speech.js" defer></script>
+{% endblock %}
+
 {% block main %}
     <div class="col-md-12 text-center">
         <img id="fellowshipImage" src="/static/img/fellowship.png">
@@ -11,8 +15,10 @@
     <div class="text-center">
         <h2 class="text-name">Qual será a aventura de hoje?</h2>
     </div>
-    <div class="text-center">
-        <input id="search-input" class="input botton-border" type="text" placeholder="Digite aqui o local da aventura" onkeyup="disableButton()">
+    <div class="input-group text-center" style="height: 20px; justify-content: center;">
+        <button id="record-button" class="input-group-text " style="border-radius: 3px 0 0 3px" onclick="record()"><i class="bi bi-mic"></i></button>
+        <button id="stop-recording-button" class="input-group-text " style="border-radius: 3px 0 0 3px" onclick="stopRecording()" hidden><i class="bi bi-mic-fill"></i></button>
+        <input id="search-input" class="input-group-text input" style="min-width: 355px" type="text" placeholder="Diga ou digite o local da aventura" onkeyup="disableButton()">        
     </div>
     <div class="text-center">
         <button id="search-button" class="custom-button" onclick="populate(getElementById('search-input').value)" hidden>Confirmar</button>

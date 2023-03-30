@@ -75,7 +75,6 @@ footer {
 .input {
     background-color: lightgray;
     border-radius: 3px;
-    border-color: black;
 }
 
 .custom-button {
@@ -154,10 +153,6 @@ footer {
     background-color: lightgray;
     border-radius: 3px;
     border-color: black;
-}
-
-#search-input {
-    width: 400px;
 }
 
 #search-button {
