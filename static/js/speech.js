@@ -19,7 +19,8 @@ class speechApi {
         var transcript = e.results[resultIndex][0].transcript
   
         inputText.value += transcript.replace('.', ' ')
-        disableButton();
+        //disableButton();
+        searchButton.click();
       }
     }
   
