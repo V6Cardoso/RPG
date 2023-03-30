@@ -1,11 +1,3 @@
-function disableButton() {
-    if(document.getElementById("search-input").value === "") { 
-        document.getElementById('search-button').hidden = true; 
-    } else { 
-        document.getElementById('search-button').hidden = false;
-    }
-}
-
 
 async function populate(text) {
     const baseURL = 'https://www.googleapis.com/customsearch/v1?';

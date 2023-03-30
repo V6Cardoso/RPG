@@ -1,6 +1,7 @@
 const recordButton = document.getElementById('record-button');
 const stopRecordingButton = document.getElementById('stop-recording-button');
 const inputText = document.getElementById("search-input");
+const searchButton = document.getElementById('search-button');
 
 class speechApi {
 
@@ -17,7 +18,8 @@ class speechApi {
         var resultIndex = e.resultIndex
         var transcript = e.results[resultIndex][0].transcript
   
-        inputText.value += transcript.replace('.', '')
+        inputText.value += transcript.replace('.', ' ')
+        disableButton();
       }
     }
   
@@ -43,4 +45,12 @@ function stopRecording() {
     recordButton.hidden = false;
     stopRecordingButton.hidden = true;
     speech.stop();
+}
+
+function disableButton() {
+    if(inputText.value === "") { 
+        searchButton.hidden = true; 
+    } else { 
+        searchButton.hidden = false;
+    }
 }
