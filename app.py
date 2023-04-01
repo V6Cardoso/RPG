@@ -3,10 +3,13 @@ from flask import Flask, flash, jsonify, redirect, render_template, request, ses
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_httpauth import HTTPBasicAuth
 
 from helpers import apology, login_required
 
 app = Flask(__name__)
+
+auth = HTTPBasicAuth()
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -35,20 +38,31 @@ def index():
     return adventure()
 
 @app.route("/myImages")
+@auth.login_required
 def myImages():
-    session.clear()
-    if request.args.get('user') == None or request.args.get('password') == None:
-        return apology('passe os parâmetros "user" e "passoword" para completar requisição', 422)
-    db.execute("SELECT * FROM users WHERE username = ?", [request.args.get('user')])
-    data = db.fetchone()
-    if not check_password_hash(data[2], request.args.get('password')):
-        return apology('falha na autenticação', 401)
-    db.execute("SELECT images FROM users_images INNER JOIN users ON users.id = users_images.user_id WHERE users.username = ?", [request.args.get('user')])
+    print(auth.username())
+    db.execute("SELECT images FROM users_images INNER JOIN users ON users.id = users_images.user_id WHERE users.username = ?", [auth.username()])
     data = db.fetchall()
+    if data == []:
+        return jsonify('Esse usuário não possui imagens no banco')
     images = {"data" : []}
     for image in data:
         images["data"].append({"link" : image[0]})
     return jsonify(images)
+
+#basic auth authorization api
+@auth.verify_password
+def authenticate(username, password):
+    if username and password:
+        db.execute("SELECT * FROM users WHERE username = ?", [username])
+        data = db.fetchone()
+        if data == None:
+            return False 
+        if check_password_hash(data[2], password):
+            return True
+        return False
+    return False
+
 
 @app.route("/adventure")
 @login_required
