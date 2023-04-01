@@ -25,10 +25,10 @@
     <br>
     <div class="d-flex">
       <p class="config-spacing text-name">Google search API</p>
-      <form class="google-keys">
-        <input id="api-key" class="input config-input config-spacing botton-border" type="text" placeholder="Chave API">
-        <input id="pse-id" class="input config-input config-spacing botton-border" type="text" placeholder="PSE ID (cx)">
-        <input type="submit" class="custom-button" onclick="saveGoogleKeys();" value="Salvar" />
+      <form form action="/config" method="post" class="google-keys">
+        <input id="api-key" name="api-key" class="input config-input config-spacing botton-border" type="text" placeholder="Chave API" value={{keys[0]}}>
+        <input id="pse-id" name="pse-id" class="input config-input config-spacing botton-border" type="text" placeholder="PSE ID (cx)" value={{keys[1]}}>
+        <input type="submit" class="custom-button" value="Salvar" />
       </form>
     </div>
     <br>

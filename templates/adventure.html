@@ -6,6 +6,10 @@
 
 {% block head %}
   <script src="/static/js/speech.js" defer></script>
+  <script>
+    var apiKey = {{ keys.apiKey|tojson }}
+    var pseId = {{ keys.pseId|tojson }}
+  </script>
 {% endblock %}
 
 {% block main %}
@@ -21,6 +25,6 @@
         <input id="search-input" class="input-group-text input" autofocus style="min-width: 355px; outline: none" type="text" placeholder="Local da aventura" onkeyup="disableButton()">        
     </div>
     <div class="text-center">
-        <button id="search-button" class="custom-button" onclick="populate(getElementById('search-input').value)" hidden>Confirmar</button>
+        <button id="search-button" class="custom-button" onclick="populate(getElementById('search-input').value, apiKey, pseId)" hidden>Confirmar</button>
     </div>
 {% endblock %}

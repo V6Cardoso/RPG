@@ -53,12 +53,28 @@ def myImages():
 @app.route("/adventure")
 @login_required
 def adventure():
-    return render_template("adventure.html", user = user)
+    db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
+    data = db.fetchone()
+    keys = {'apiKey': data[0], 'pseId': data[1]}
+    return render_template("adventure.html", user = user, keys=keys)
 
-@app.route("/config")
+@app.route("/config", methods=["GET", "POST"])
 @login_required
 def config():
-    return render_template("config.html", user = user)
+    if request.method == "POST":
+        db.execute("SELECT * FROM users_apikey WHERE user_id = ?", [session["user_id"]])
+        rows = db.fetchall()
+        if rows != []:
+            db.execute("Update users_apikey SET apiKey = ?, pseId = ? WHERE user_id = ?", (request.form.get("api-key"), request.form.get("pse-id"), session["user_id"]))
+            con.commit()
+        else:
+            db.execute("INSERT INTO users_apikey(apiKey, pseId, user_id) VALUES(?, ?, ?)", (request.form.get("api-key"), request.form.get("pse-id"), session["user_id"]))
+            con.commit()
+            return redirect('/config')
+    else:
+        db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
+        data = db.fetchone()
+        return render_template("config.html", user = user, keys=data)
 
 @app.route("/collection", methods=["GET", "POST"])
 @login_required
