@@ -5,10 +5,6 @@
     Configurações
 {% endblock %}
 
-{% block head %}
-  <script src="/static/js/config.js" defer></script>
-{% endblock %}
-
 {% block main %}
   <div class="text-center">
     <h2 class="text-name">Configurações</h2>
@@ -25,10 +21,21 @@
     <br>
     <div class="d-flex">
       <p class="config-spacing text-name">Google search API</p>
-      <form form action="/config" method="post" class="google-keys">
-        <input id="api-key" name="api-key" class="input config-input config-spacing botton-border" type="text" placeholder="Chave API" value={{keys[0]}}>
-        <input id="pse-id" name="pse-id" class="input config-input config-spacing botton-border" type="text" placeholder="PSE ID (cx)" value={{keys[1]}}>
+      <form form action="/config" method="post">
+        <input id="api-key" name="api-key" class="input config-input config-spacing botton-border" type="text" placeholder="Chave API" value={{keys.apiKey}}>
+        <input id="pse-id" name="pse-id" class="input config-input config-spacing botton-border" type="text" placeholder="PSE ID (cx)" value={{keys.pseId}}>
         <input type="submit" class="custom-button" value="Salvar" />
+      </form>
+    </div>
+    <br>
+    <div class="d-flex">
+      <p class="config-spacing text-name">Não possui as chaves de acesso?</p>
+      <form action="https://programmablesearchengine.google.com/controlpanel/all" target="_blank">
+        <button class="custom-button">Gerar com conta Google</button>
+      </form>
+      <p class="config-spacing text-name" style="padding-left: 20px">Ou</p>
+      <form form action="/demoMode" method="post">
+        <button type="submit" class="custom-button">Entrar no modo avaliação</button>
       </form>
     </div>
     <br>

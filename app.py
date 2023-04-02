@@ -40,7 +40,6 @@ def index():
 @app.route("/myImages")
 @auth.login_required
 def myImages():
-    print(auth.username())
     db.execute("SELECT images FROM users_images INNER JOIN users ON users.id = users_images.user_id WHERE users.username = ?", [auth.username()])
     data = db.fetchall()
     if data == []:
@@ -67,9 +66,21 @@ def authenticate(username, password):
 @app.route("/adventure")
 @login_required
 def adventure():
-    db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
+    db.execute("SELECT apiKey, pseId, demoCounter FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
     data = db.fetchone()
-    keys = {'apiKey': data[0], 'pseId': data[1]}
+    if data == None:
+        return redirect('/config')
+    if data[0] == None or data[1] == None:
+        if data[2] != None:
+            if data[2] == 0:
+                return redirect('/config')
+            db.execute("Update users_apikey SET demoCounter = ? WHERE user_id = ?", (data[2] - 1, session["user_id"]))
+            con.commit()
+            db.execute("SELECT apiKey, pseId FROM users_apikey WHERE id_key = ? ", [1])
+            data = db.fetchone()
+        else:
+            return redirect('/config')
+    keys = {'apiKey': data[0], 'pseId': data[1], "text": request.form.get("text")}
     return render_template("adventure.html", user = user, keys=keys)
 
 @app.route("/config", methods=["GET", "POST"])
@@ -88,7 +99,29 @@ def config():
     else:
         db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
         data = db.fetchone()
-        return render_template("config.html", user = user, keys=data)
+        keys = {'apiKey': data[0] if data[0] != None else '', 'pseId': data[1] if data[1] != None else ''}
+        return render_template("config.html", user = user, keys=keys)
+    
+@app.route("/demoMode", methods=["POST"])
+@login_required
+def demoMode():
+    db.execute("SELECT * FROM users_apikey WHERE user_id = ?", [session["user_id"]])
+    data = db.fetchone()
+    if data == None:
+        db.execute("INSERT INTO users_apikey(demoCounter, user_id) VALUES(?, ?)", (1000, session["user_id"]))
+        con.commit()
+        return redirect("/adventure")
+    demoCounter = data[4]
+    if demoCounter != None:
+        if demoCounter == 0:
+            return apology("Avaliação acabou :/", 406)
+        else:
+            return apology("Avaliação ativa, faça suas pesquisas", 200)
+    db.execute("Update users_apikey SET demoCounter = ? WHERE user_id = ?", (1000, session["user_id"]))
+    con.commit()
+    return redirect("/adventure")
+
+
 
 @app.route("/collection", methods=["GET", "POST"])
 @login_required
