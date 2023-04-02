@@ -95,7 +95,7 @@ def config():
         else:
             db.execute("INSERT INTO users_apikey(apiKey, pseId, user_id) VALUES(?, ?, ?)", (request.form.get("api-key"), request.form.get("pse-id"), session["user_id"]))
             con.commit()
-            return redirect('/config')
+        return redirect('/config')
     else:
         db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
         data = db.fetchone()
