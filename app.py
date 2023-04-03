@@ -138,7 +138,7 @@ def collection():
 def imageView():
     if request.method == "POST":
 
-        db.execute("SELECT * FROM users_images WHERE images = ?", [request.form.get("image")])
+        db.execute("SELECT * FROM users_images WHERE images = ? AND user_id = ?", [request.form.get("image"), session["user_id"]])
         rows = db.fetchall()
 
         if len(rows) == 0:
