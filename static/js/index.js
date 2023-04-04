@@ -1,8 +1,6 @@
 
-async function populate(text) {
+async function populate(text, apiKey, pseId) {
     const baseURL = 'https://www.googleapis.com/customsearch/v1?';
-    const apiKey = localStorage.getItem('apiKey');
-    const pseId = localStorage.getItem('pseId');
 
     //check if keys were set
     if (!apiKey || !pseId)

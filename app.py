@@ -4,10 +4,13 @@ from flask import Flask, flash, jsonify, redirect, render_template, request, ses
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_httpauth import HTTPBasicAuth
 
 from helpers import apology, login_required
 
 app = Flask(__name__)
+
+auth = HTTPBasicAuth()
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -36,30 +39,90 @@ def index():
     return adventure()
 
 @app.route("/myImages")
+@auth.login_required
 def myImages():
-    session.clear()
-    if request.args.get('user') == None or request.args.get('password') == None:
-        return apology('passe os parâmetros "user" e "passoword" para completar requisição', 422)
-    db.execute("SELECT * FROM users WHERE username = ?", [request.args.get('user')])
-    data = db.fetchone()
-    if not check_password_hash(data[2], request.args.get('password')):
-        return apology('falha na autenticação', 401)
-    db.execute("SELECT images FROM users_images INNER JOIN users ON users.id = users_images.user_id WHERE users.username = ?", [request.args.get('user')])
+    db.execute("SELECT images FROM users_images INNER JOIN users ON users.id = users_images.user_id WHERE users.username = ?", [auth.username()])
     data = db.fetchall()
+    if data == []:
+        return jsonify('Esse usuário não possui imagens no banco')
     images = {"data" : []}
     for image in data:
         images["data"].append({"link" : image[0]})
     return jsonify(images)
 
+#basic auth authorization api
+@auth.verify_password
+def authenticate(username, password):
+    if username and password:
+        db.execute("SELECT * FROM users WHERE username = ?", [username])
+        data = db.fetchone()
+        if data == None:
+            return False 
+        if check_password_hash(data[2], password):
+            return True
+        return False
+    return False
+
+
 @app.route("/adventure")
 @login_required
 def adventure():
-    return render_template("adventure.html", user = user)
+    db.execute("SELECT apiKey, pseId, demoCounter FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
+    data = db.fetchone()
+    if data == None:
+        return redirect('/config')
+    if data[0] == None or data[1] == None:
+        if data[2] != None:
+            if data[2] == 0:
+                return redirect('/config')
+            db.execute("Update users_apikey SET demoCounter = ? WHERE user_id = ?", (data[2] - 1, session["user_id"]))
+            con.commit()
+            db.execute("SELECT apiKey, pseId FROM users_apikey WHERE id_key = ? ", [1])
+            data = db.fetchone()
+        else:
+            return redirect('/config')
+    keys = {'apiKey': data[0], 'pseId': data[1], "text": request.form.get("text")}
+    return render_template("adventure.html", user = user, keys=keys)
 
-@app.route("/config")
+@app.route("/config", methods=["GET", "POST"])
 @login_required
 def config():
-    return render_template("config.html", user = user)
+    if request.method == "POST":
+        db.execute("SELECT * FROM users_apikey WHERE user_id = ?", [session["user_id"]])
+        rows = db.fetchall()
+        if rows != []:
+            db.execute("Update users_apikey SET apiKey = ?, pseId = ? WHERE user_id = ?", (request.form.get("api-key"), request.form.get("pse-id"), session["user_id"]))
+            con.commit()
+        else:
+            db.execute("INSERT INTO users_apikey(apiKey, pseId, user_id) VALUES(?, ?, ?)", (request.form.get("api-key"), request.form.get("pse-id"), session["user_id"]))
+            con.commit()
+        return redirect('/config')
+    else:
+        db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
+        data = db.fetchone()
+        keys = {'apiKey': data[0] if data[0] != None else '', 'pseId': data[1] if data[1] != None else ''}
+        return render_template("config.html", user = user, keys=keys)
+    
+@app.route("/demoMode", methods=["POST"])
+@login_required
+def demoMode():
+    db.execute("SELECT * FROM users_apikey WHERE user_id = ?", [session["user_id"]])
+    data = db.fetchone()
+    if data == None:
+        db.execute("INSERT INTO users_apikey(demoCounter, user_id) VALUES(?, ?)", (1000, session["user_id"]))
+        con.commit()
+        return redirect("/adventure")
+    demoCounter = data[4]
+    if demoCounter != None:
+        if demoCounter == 0:
+            return apology("Avaliação acabou :/", 406)
+        else:
+            return apology("Avaliação ativa, faça suas pesquisas", 200)
+    db.execute("Update users_apikey SET demoCounter = ? WHERE user_id = ?", (1000, session["user_id"]))
+    con.commit()
+    return redirect("/adventure")
+
+
 
 #Gerencia imagens do usuario
 @app.route("/collection", methods=["GET", "POST"])
@@ -77,7 +140,7 @@ def collection():
 def imageView():
     if request.method == "POST":
 
-        db.execute("SELECT * FROM users_images WHERE images = ?", [request.form.get("image")])
+        db.execute("SELECT * FROM users_images WHERE images = ? AND user_id = ?", [request.form.get("image"), session["user_id"]])
         rows = db.fetchall()
 
         if len(rows) == 0:
