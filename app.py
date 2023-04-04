@@ -1,3 +1,4 @@
+#requisição das dependencias
 import sqlite3
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
@@ -15,7 +16,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
+#conexao com banco de dados
 con = sqlite3.connect("RPGdatabase.db", check_same_thread=False)
 db = con.cursor()
 
@@ -23,12 +24,12 @@ db = con.cursor()
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
+    response.headers["Pragma"] = "no-cache" 
     return response
 
 user = 'usuário'
 
-
+#Busca imagens salvas por cada usuario
 @app.route("/")
 @login_required
 def index():
@@ -60,6 +61,7 @@ def adventure():
 def config():
     return render_template("config.html", user = user)
 
+#Gerencia imagens do usuario
 @app.route("/collection", methods=["GET", "POST"])
 @login_required
 def collection():
@@ -93,6 +95,7 @@ def imageView():
                 return apology("imagem não encontrada", 400)
         return render_template("imageView.html", user = user, image=image)
 
+#Controle de login
 @app.route("/login", methods=["GET", "POST"])
 def login():
     global user
@@ -124,7 +127,7 @@ def logout():
     session.clear()
     return redirect("/")
 
-
+#Controle de cadastro
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -151,7 +154,9 @@ def register():
         return redirect("/")
     else:
         return render_template("register.html")
+    
 
+#Controle de erros
 @app.errorhandler(500)
 @login_required
 def page_not_found(e):
