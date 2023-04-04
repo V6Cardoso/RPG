@@ -1,3 +1,4 @@
+#requisição das dependencias
 import sqlite3
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
@@ -18,7 +19,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
+#conexao com banco de dados
 con = sqlite3.connect("RPGdatabase.db", check_same_thread=False)
 db = con.cursor()
 
@@ -31,7 +32,7 @@ def after_request(response):
 
 user = 'usuário'
 
-
+#Busca imagens salvas por cada usuario
 @app.route("/")
 @login_required
 def index():
@@ -83,6 +84,7 @@ def adventure():
     keys = {'apiKey': data[0], 'pseId': data[1], "text": request.form.get("text")}
     return render_template("adventure.html", user = user, keys=keys)
 
+#Gerencia imagens do usuario
 @app.route("/config", methods=["GET", "POST"])
 @login_required
 def config():
@@ -156,6 +158,7 @@ def imageView():
                 return apology("imagem não encontrada", 400)
         return render_template("imageView.html", user = user, image=image)
 
+#Controle de login
 @app.route("/login", methods=["GET", "POST"])
 def login():
     global user
@@ -187,7 +190,7 @@ def logout():
     session.clear()
     return redirect("/")
 
-
+#Controle de cadastro
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -215,6 +218,7 @@ def register():
     else:
         return render_template("register.html")
 
+#Controle de erros
 @app.errorhandler(500)
 @login_required
 def page_not_found(e):
