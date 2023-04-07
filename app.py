@@ -5,6 +5,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_httpauth import HTTPBasicAuth
+from os.path import exists
 
 from helpers import apology, login_required
 
@@ -20,7 +21,13 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 #conexao com banco de dados
-con = sqlite3.connect("RPGdatabase.db", check_same_thread=False)
+localPathFile = "./RPGdatabase.db"
+serverPathFile = "/home/v6cardoso/RPG/RPGdatabase.db"
+con = None
+if exists(localPathFile):
+    con = sqlite3.connect(localPathFile, check_same_thread=False)
+elif exists(serverPathFile):
+    con = sqlite3.connect(serverPathFile, check_same_thread=False)
 db = con.cursor()
 
 @app.after_request
