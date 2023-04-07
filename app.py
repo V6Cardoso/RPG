@@ -108,7 +108,7 @@ def config():
     else:
         db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
         data = db.fetchone()
-        keys = {'apiKey': data[0] if data[0] != None else '', 'pseId': data[1] if data[1] != None else ''}
+        keys = {'apiKey': data[0] if data != None else '', 'pseId': data[1] if data != None else ''}
         return render_template("config.html", user = user, keys=keys)
     
 @app.route("/demoMode", methods=["POST"])
