@@ -1,0 +1,41 @@
+<!--Tela de login --> 
+{% extends "layout.html" %}
+
+{% block title %}
+    Sobre
+{% endblock %}
+
+{% block head %}
+  <script src="/static/js/about.js" defer></script>
+{% endblock %}
+
+{% block main %}
+    <div class="about">
+        <marquee id="marquee-image" behavior="slide" direction="up" scrollamount="6" scrolldelay="80">
+            <img id="chad-image" src="/static/img/chad-gandalf.png">
+        </marquee>
+        <div id="old-paper-container">
+            <div id="paper-text-container" class="relative-center">
+                <h1 class="text-center paper-font" style="font-size:xx-large;">Sistema de ambientação inteligente para RPG</h1>
+                <p class="paper-text paper-font">
+                    Seja bem-vindo ao nosso site! Aqui, estamos comprometidos em fornecer
+                     a você as ferramentas necessárias para criar mundos incríveis e envolventes para seus jogadores.
+                </p>
+                <p class="paper-text paper-font">
+                    Sabemos que a ambientação é um dos elementos mais importantes de qualquer jogo de RPG, pois ajuda a estabelecer o clima, 
+                    a atmosfera e a imersão dos jogadores. É por isso que oferecemos um serviço de qualidade para ajudá-lo a 
+                    construir mundos ricos em detalhes e repletos de vida.
+                </p>
+                <p class="paper-text paper-font">
+                    Lembre-se: a ambientação não é apenas sobre criar um mundo bonito visualmente, mas sim sobre dar 
+                    vida a ele e fazer com que seus jogadores se sintam parte dele. Com nossos recursos, você poderá criar 
+                    uma experiência única e inesquecível para seus jogadores, deixando-os completamente imersos no mundo que você criou.
+                </p>
+                <p class="paper-text paper-font">
+                    Então, não hesite mais! Comece a explorar o site agora e dê vida ao seu mundo de RPG. Juntos, podemos criar 
+                    aventuras emocionantes e inesquecíveis para todos os jogadores envolvidos.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

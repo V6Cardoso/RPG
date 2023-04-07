@@ -19,17 +19,19 @@
     <div class="menu">
       <ul class="dropdown-menu dropdown-menu-dark d-block position-static mx-0 border-0 shadow w-220px">
         {% if session["user_id"] %}
-          <li><h4 class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-person-circle"></i>Olá {{user}}</h4></li>
+          <li><h4 class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-person-circle"></i><marquee scrollamount="3" scrolldelay="80">Olá {{user}}</marquee></h4></li>
           <hr class="dropdown-divider">
           <li><a href="/adventure" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-house"></i>AVENTURA</a></li>
           <li><a href="/config" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-gear"></i>CONFIGURAÇÕES</a></li>
           <li><a href="/collection" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-folder"></i>COLEÇÃO</a></li>
+          <li><a href="/about" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-info-circle"></i>SOBRE</a></li>
           <hr class="dropdown-divider">
           <li><a href="/logout" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-box-arrow-left"></i>Sair</a></li>
         {% else %}
           <li><a href="/login" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-file-person"></i>LOGIN</a></li>
-          <hr class="dropdown-divider">
           <li><a href="/register" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-pencil"></i>REGISTRAR-SE</a></li>
+          <hr class="dropdown-divider">
+          <li><a href="/about" class="menu-item dropdown-item d-flex gap-2 align-items-center"><i class="bi bi-info-circle"></i>SOBRE</a></li>
         {% endif %}
       </ul>
     </div>

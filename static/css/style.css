@@ -41,7 +41,7 @@ header {
     border-width: 10px;
     border-color: gray;
     border-radius: 20px;
-    padding: 5px;
+    /* padding: 5px; */
 }
 
 .imageView {
@@ -167,6 +167,55 @@ footer {
 #image-full {
     max-width: 100%;
     max-height: 100%;
+}
+
+.about {
+  margin: 0;
+  padding: 0; 
+}
+
+#marquee-image {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+#chad-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  bottom: 0;
+  border-radius: 20px;
+}
+
+#old-paper-container {
+  position: fixed;
+  height: 62%;
+  width: 45%;
+  top: 14vh;
+  left: 35%;
+  background-image: url("/static/img/old-paper.png");
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+#paper-text-container {
+  position: relative;
+  width: 55%;
+  max-height: 70%;
+  overflow-y: scroll;
+}
+
+.paper-text {
+  font-size: 1.5em;
+  text-indent: 25px;
+}
+
+.paper-font {
+  font-style: italic;
+  font-family: 'Apple Chancery', 'Brush Script MT', 'URW Chancery L';
 }
 
 
