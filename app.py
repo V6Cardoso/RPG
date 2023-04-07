@@ -22,7 +22,7 @@ Session(app)
 
 #conexao com banco de dados
 localPathFile = "./RPGdatabase.db"
-serverPathFile = "/home/v6cardoso/RPG/RPGdatabase.db"
+serverPathFile = "/home/v6cardoso/RPGdatabase.db"
 con = None
 if exists(localPathFile):
     con = sqlite3.connect(localPathFile, check_same_thread=False)
