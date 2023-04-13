@@ -8,6 +8,7 @@ from flask_httpauth import HTTPBasicAuth
 from os.path import exists
 
 from helpers import apology, login_required
+from nlp import analysis
 
 app = Flask(__name__)
 
@@ -90,6 +91,11 @@ def adventure():
             return redirect('/config')
     keys = {'apiKey': data[0], 'pseId': data[1], "text": request.form.get("text")}
     return render_template("adventure.html", user = user, keys=keys)
+
+
+@app.route('/analysis', methods=["POST"])
+def analyse():
+    return analysis(request.form.get("text"))
 
 #Gerencia imagens do usuario
 @app.route("/config", methods=["GET", "POST"])

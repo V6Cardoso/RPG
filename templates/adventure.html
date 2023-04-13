@@ -7,25 +7,67 @@
 
 {% block head %}
   <script src="/static/js/speech.js" defer></script>
+  <script src="/static/js/adventure.js" defer></script>
   <script>
     var apiKey = {{ keys.apiKey|tojson }}
     var pseId = {{ keys.pseId|tojson }}
   </script>
+  <script>
+    function analyseText(text) {
+        event.preventDefault();
+        event.stopPropagation();
+        $.ajax({
+            url: '{{url_for("analyse")}}',
+            type: 'POST',
+            data: {
+                text: text
+            },
+            success: function (response) {
+              console.log(response);
+              response.forEach(text => populate(text, apiKey, pseId));
+            },
+            error: function (response) {
+            }
+        });
+    }
+  </script>
 {% endblock %}
 
 {% block main %}
-    <div class="col-md-12 text-center">
-        <img id="fellowshipImage" src="/static/img/fellowship.png">
+    <div id="greeting-container" hidden class="col-md-12 text-center">
+      <img id="fellowshipImage" src="/static/img/fellowship.png">
+      <h2 class="text-name">Qual será a aventura de hoje?</h2>
     </div>
-    <div class="text-center">
-        <h2 class="text-name">Qual será a aventura de hoje?</h2>
+    <div id="images-container">
+        <div class="imageCollection" style="position:relative;">
+            <button type="button" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
+            <img class="image" src="https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/wp-content/uploads/2017/01/2017-Porsche-911-Turbo-108.jpg?crop=0.595xw:0.971xh;0.357xw,0.0289xh&resize=1200:*">
+        </div>
+        <div class="imageCollection" style="position:relative;">
+            <button type="button" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
+            <img class="image" src="https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/wp-content/uploads/2017/01/2017-Porsche-911-Turbo-108.jpg?crop=0.595xw:0.971xh;0.357xw,0.0289xh&resize=1200:*">
+        </div>
+        <div class="imageCollection" style="position:relative;">
+            <button type="button" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
+            <img class="image" src="https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/wp-content/uploads/2017/01/2017-Porsche-911-Turbo-108.jpg?crop=0.595xw:0.971xh;0.357xw,0.0289xh&resize=1200:*">
+        </div>
+        <div class="imageCollection" style="position:relative;">
+            <button type="button" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
+            <img class="image" src="https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/wp-content/uploads/2017/01/2017-Porsche-911-Turbo-108.jpg?crop=0.595xw:0.971xh;0.357xw,0.0289xh&resize=1200:*">
+        </div>
+        <div class="imageCollection" style="position:relative;">
+            <button type="button" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
+            <img class="image" src="https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/wp-content/uploads/2017/01/2017-Porsche-911-Turbo-108.jpg?crop=0.595xw:0.971xh;0.357xw,0.0289xh&resize=1200:*">
+        </div>
+        <div class="imageCollection" style="position:relative;">
+            <button type="button" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
+            <img class="image" src="https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/wp-content/uploads/2017/01/2017-Porsche-911-Turbo-108.jpg?crop=0.595xw:0.971xh;0.357xw,0.0289xh&resize=1200:*">
+        </div>
     </div>
-    <div class="input-group text-center" style="height: 20px; justify-content: center;">
+    <div class="input-group search-input-group">
         <button id="record-button" class="input-group-text " style="border-radius: 3px 0 0 3px" onclick="record()"><i class="bi bi-mic"></i></button>
         <button id="stop-recording-button" class="input-group-text " style="border-radius: 3px 0 0 3px" onclick="stopRecording()" hidden><i class="bi bi-mic-fill"></i></button>
-        <input id="search-input" class="input-group-text input" autofocus style="min-width: 355px; outline: none" type="text" placeholder="Local da aventura" onkeyup="disableButton()">        
+        <input id="search-input" class="input-group-text input search-input" type="text" onchange="searchText(event)" placeholder="Local da aventura">
     </div>
-    <div class="text-center">
-        <button id="search-button" class="custom-button" onclick="populate(getElementById('search-input').value, apiKey, pseId)" hidden>Confirmar</button>
-    </div>
+    
 {% endblock %}
