@@ -7,25 +7,84 @@
 
 {% block head %}
   <script src="/static/js/speech.js" defer></script>
+  <script src="/static/js/dragging.js" defer></script>
+  <script src="/static/js/adventure.js" defer></script>
   <script>
     var apiKey = {{ keys.apiKey|tojson }}
     var pseId = {{ keys.pseId|tojson }}
+    var images = {{images|tojson}}
+  </script>
+  <script>
+    function analyseText(text) {
+        event.preventDefault();
+        event.stopPropagation();
+        $.ajax({
+            url: '{{url_for("analyse")}}',
+            type: 'POST',
+            data: {
+                text: text
+            },
+            success: function (response) {
+              console.log(response);
+              response.forEach(text => populate(text, apiKey, pseId));
+            },
+            error: function (response) {
+            }
+        });
+    }
+    function saveCollection() {
+      const collectionInput = document.querySelector('.collection-input')
+      const carousel = document.querySelector('.carousel');
+      let images = [];
+      Array.prototype.forEach.call(carousel.children, function(element) {
+        images.push(element.children[1].src);
+      });
+      images = images.join(';');
+      console.log(images)
+      params = new URLSearchParams(document.location.search);
+      $.ajax({
+          url: '{{url_for("adventure")}}',
+          type: 'POST',
+          data: {
+              images: images,
+              id: params.get('id'),
+              collectionName: collectionInput.value
+          },
+          success: function (response) {
+            window.location.replace('collection');
+          },
+          error: function (response) {
+          }
+      });
+     }
   </script>
 {% endblock %}
 
 {% block main %}
-    <div class="col-md-12 text-center">
-        <img id="fellowshipImage" src="/static/img/fellowship.png">
+    <div id="greeting-container" class="col-md-12 text-center">
+      <img id="fellowshipImage" src="/static/img/fellowship.png">
+      <h2 class="text-name">Qual será a aventura de hoje?</h2>
     </div>
-    <div class="text-center">
-        <h2 class="text-name">Qual será a aventura de hoje?</h2>
+
+    <div hidden class="save-collection">
+      <input class="input search-input collection-input" oninput="enableSaveButton()" type="text" placeholder="nome da coleção">
+      <button class="custom-button" disabled onclick="saveCollection()"><i class="bi bi-download"></i> Salvar</button>
     </div>
-    <div class="input-group text-center" style="height: 20px; justify-content: center;">
+
+    <div id="images-container" hidden class="wrapper">
+        <h1 id="left" class="arrow"><i class="bi bi-caret-left"></i></h1>
+
+        <div class="carousel"></div>
+        
+        <h1 id="right" class="arrow"><i class="bi bi-caret-right"></i></h1>
+    </div>
+
+    <div class="input-group search-input-group">
         <button id="record-button" class="input-group-text " style="border-radius: 3px 0 0 3px" onclick="record()"><i class="bi bi-mic"></i></button>
         <button id="stop-recording-button" class="input-group-text " style="border-radius: 3px 0 0 3px" onclick="stopRecording()" hidden><i class="bi bi-mic-fill"></i></button>
-        <input id="search-input" class="input-group-text input" autofocus style="min-width: 355px; outline: none" type="text" placeholder="Local da aventura" onkeyup="disableButton()">        
+        <input id="search-input" class="input-group-text input search-input" type="text" onchange="searchText(event)" placeholder="Local da aventura">
     </div>
-    <div class="text-center">
-        <button id="search-button" class="custom-button" onclick="populate(getElementById('search-input').value, apiKey, pseId)" hidden>Confirmar</button>
-    </div>
+    
+    
+    
 {% endblock %}

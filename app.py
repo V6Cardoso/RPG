@@ -11,6 +11,7 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from os.path import exists
 
 from helpers import apology, login_required
+from nlp import analysis
 
 app = Flask(__name__)
 
@@ -86,25 +87,45 @@ def generateToken():
 
 
 
-@app.route("/adventure")
+@app.route("/adventure", methods=["GET", "POST"])
 @login_required
 def adventure():
-    db.execute("SELECT apiKey, pseId, demoCounter FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
-    data = db.fetchone()
-    if data == None:
-        return redirect('/config')
-    if data[0] == None or data[1] == None:
-        if data[2] != None:
-            if data[2] == 0:
-                return redirect('/config')
-            db.execute("Update users_apikey SET demoCounter = ? WHERE user_id = ?", (data[2] - 1, session["user_id"]))
+    if request.method == "POST":
+        if request.form.get("id"):
+            db.execute("UPDATE users_images SET images = ?, collection_name = ? WHERE id_container = ? AND user_id = ?", (request.form.get("images"), request.form.get("collectionName"), request.form.get("id"), session["user_id"]))
             con.commit()
-            db.execute("SELECT apiKey, pseId FROM users_apikey WHERE id_key = ? ", [1])
-            data = db.fetchone()
         else:
+            db.execute("INSERT INTO users_images(user_id, images, collection_name) VALUES(?, ?, ?)", (session["user_id"], request.form.get("images"), request.form.get("collectionName")))
+            con.commit()
+        return redirect('/collection')
+    else:
+        db.execute("SELECT apiKey, pseId, demoCounter FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
+        data = db.fetchone()
+        if data == None:
             return redirect('/config')
-    keys = {'apiKey': data[0], 'pseId': data[1], "text": request.form.get("text")}
-    return render_template("adventure.html", user = user, keys=keys)
+        if data[0] == None or data[1] == None:
+            if data[2] != None:
+                if data[2] == 0:
+                    return redirect('/config')
+                db.execute("Update users_apikey SET demoCounter = ? WHERE user_id = ?", (data[2] - 1, session["user_id"]))
+                con.commit()
+                db.execute("SELECT apiKey, pseId FROM users_apikey WHERE id_key = ? ", [1])
+                data = db.fetchone()
+            else:
+                return redirect('/config')
+        images = None
+        if request.args.get('id'):
+            db.execute("SELECT images, collection_name FROM users_images WHERE id_container = ? AND user_id = ?", (request.args.get('id'), session["user_id"]))
+            images = db.fetchone()
+            if images == None:
+                return apology("coleção não encontrada", 400)
+        keys = {'apiKey': data[0], 'pseId': data[1], "text": request.form.get("text")}
+        return render_template("adventure.html", user = user, keys=keys, images = images)
+
+
+@app.route('/analysis', methods=["POST"])
+def analyse():
+    return analysis(request.form.get("text"))
 
 #Gerencia imagens do usuario
 @app.route("/config", methods=["GET", "POST"])
@@ -156,29 +177,6 @@ def collection():
     db.execute("SELECT * FROM users_images WHERE user_id = ?", [session["user_id"]])
     rows = db.fetchall()
     return render_template("collection.html", user = user, images=rows)
-
-@app.route("/imageView", methods=["GET", "POST"])
-@login_required
-def imageView():
-    if request.method == "POST":
-
-        db.execute("SELECT * FROM users_images WHERE images = ? AND user_id = ?", [request.form.get("image"), session["user_id"]])
-        rows = db.fetchall()
-
-        if len(rows) == 0:
-            db.execute("INSERT INTO users_images(user_id, images) VALUES(?, ?)", (session["user_id"], request.form.get("image")))
-            con.commit()
-        return redirect('/collection')
-    else:
-        if request.args.get('link'):
-            image = ['','', request.args.get('link')]
-        else:
-            imageId = request.args.get('id')
-            db.execute("SELECT * FROM users_images WHERE id_container = ? AND user_id = ?", (imageId, session["user_id"]))
-            image = db.fetchone()
-            if image == None or image[2] == None:
-                return apology("imagem não encontrada", 400)
-        return render_template("imageView.html", user = user, image=image)
 
 #Controle de login
 @app.route("/login", methods=["GET", "POST"])
