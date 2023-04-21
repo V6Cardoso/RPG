@@ -1,5 +1,6 @@
 const body = document.querySelector("body");
 const input = document.getElementById('search-input');
+const collectionInput = document.querySelector('.collection-input')
 const carousel = document.querySelector(".carousel");
 const arrowIcons = document.getElementsByClassName("arrow");
 //const imageContainer = document.querySelector('.image-container');
@@ -57,7 +58,7 @@ const dragging = (e) => {
 function checkKey(e) {
     e = e || window.event;
 
-    if (document.activeElement == input)
+    if (document.activeElement == input || document.activeElement == collectionInput)
         return;
 
     //left arrow

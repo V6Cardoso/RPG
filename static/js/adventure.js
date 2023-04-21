@@ -2,7 +2,6 @@ const greetingContainer = document.getElementById('greeting-container');
 const imagesContainer = document.getElementById('images-container');
 const carouselContainer = document.querySelector('.carousel');
 const saveCollectionContainer = document.querySelector('.save-collection');
-const collectionInput = document.querySelector('.collection-input')
 
 function enableSaveButton() {
     document.querySelector('.custom-button').disabled = collectionInput.value == '';
