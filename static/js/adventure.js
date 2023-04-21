@@ -30,7 +30,6 @@ async function populate(text, apiKey, pseId) {
     
     const response = await fetch(request);
     const image = await response.json();
-    console.log(JSON.stringify(image))
     populateSource(image?.items[0].link.replace(/^(.+?\.(png|jpg|svg|gif|bmp)\x2F).*$/i, '$1'));//\x2F -> forward slash
 
 }
