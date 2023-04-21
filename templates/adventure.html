@@ -25,6 +25,7 @@
                 text: text
             },
             success: function (response) {
+              console.log(response)
               response.forEach(text => populate(text, apiKey, pseId));
             },
             error: function (response) {
