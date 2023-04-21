@@ -5,6 +5,9 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_httpauth import HTTPBasicAuth
+
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
+
 from os.path import exists
 
 from helpers import apology, login_required
@@ -18,6 +21,11 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SESSION_PERMANENT"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config["SESSION_TYPE"] = "filesystem"
+
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!-------------------------------------------------------------------------------------
+jwt = JWTManager(app)
+
 Session(app)
 
 #conexao com banco de dados
@@ -46,16 +54,16 @@ def index():
     return adventure()
 
 @app.route("/myImages")
-@auth.login_required
+@jwt_required()
 def myImages():
-    db.execute("SELECT images FROM users_images INNER JOIN users ON users.id = users_images.user_id WHERE users.username = ?", [auth.username()])
+    db.execute("SELECT images FROM users_images INNER JOIN users ON users.id = users_images.user_id WHERE users.username = ?", [get_jwt_identity()])
     data = db.fetchall()
     if data == []:
         return jsonify('Esse usuário não possui imagens no banco')
     images = {"data" : []}
     for image in data:
         images["data"].append({"link" : image[0]})
-    return jsonify(images)
+    return jsonify(images), 200
 
 #basic auth authorization api
 @auth.verify_password
@@ -64,11 +72,18 @@ def authenticate(username, password):
         db.execute("SELECT * FROM users WHERE username = ?", [username])
         data = db.fetchone()
         if data == None:
-            return False 
+            return False
         if check_password_hash(data[2], password):
             return True
         return False
     return False
+
+@app.route("/generateToken", methods=["POST"])
+@auth.login_required
+def generateToken():
+    access_token = create_access_token(identity=auth.username())
+    return jsonify(access_token=access_token), 200
+
 
 
 @app.route("/adventure")
