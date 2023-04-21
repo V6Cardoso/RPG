@@ -15,8 +15,6 @@ function searchText(event) {
 
 async function populate(text, apiKey, pseId) {
     const baseURL = 'https://www.googleapis.com/customsearch/v1?';
-
-    //check if keys were set
     
 
     if (text == '')
