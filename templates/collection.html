@@ -29,10 +29,15 @@
 {% block main %}
   <div id="img-collection" class="img-collection overflow-style text-center row d-flex justify-content-around align-items-center scrollbar-primary">
     {% for image in images %}
-      <a class="image-link" onclick="{{url_for('collection')}}" href="imageView?id={{image[0]}}">
+      <a class="image-link" onclick="{{url_for('collection')}}" href="adventure?id={{image[0]}}">
         <div style="position:relative;">
           <button type="button" onclick="deleteImage()" data-id="{{image[0]}}" class="delete-button btn btn-danger"><i class="bi bi-trash"></i></button>
-          <img class="image" src={{image[2]}}>
+          <div class="image-collection-size">
+            <img class="image" src={{image[2]}}>
+            {% if image[3] %}
+              <h1 class="collection-title">{{image[3]}}</h1>
+            {% endif %}
+          </div>
         </div>
       </a>
     {% endfor %}
