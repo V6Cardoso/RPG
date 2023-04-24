@@ -4,9 +4,13 @@ from spacy import load, displacy, explain
 config = json.load(open("home/v6cardoso/config.json"))
 nlp = load(config["spacyModulePath"])
 
+docLocal = nlp('localidade, lugar, lugares, vila, zona, região, localização, espaço, território, ambiente, bioma')
+
 def analysis(text):
     doc = nlp(text)
-    return [chunk.text for chunk in doc.noun_chunks]
-
-
-#print(analysis('Os aventureiros entraram em uma caverna escura no Japão e em Nova Iorque, joãozinho disse olhando para uma batata bonita vamos ao vilarejo no próximo final de semana'))
+    values = []
+    for chunk in doc.noun_chunks:
+         print(chunk.root.text, " -> " , chunk.root.similarity(docLocal))
+         if chunk.root.ent_type_ == 'LOC' or chunk.root.similarity(docLocal) >= 0.21:
+            values.append(chunk.text)
+    return values
