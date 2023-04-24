@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 RPGdatabase.db
 flask_session/*
+config.json

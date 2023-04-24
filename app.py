@@ -1,5 +1,5 @@
 #requisição das dependencias
-import sqlite3
+import sqlite3, json
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
@@ -15,6 +15,8 @@ from nlp import analysis
 
 app = Flask(__name__)
 
+config = json.load(open("home/v6cardoso/config.json"))
+
 auth = HTTPBasicAuth()
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -24,19 +26,13 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!-------------------------------------------------------------------------------------
+app.config["JWT_SECRET_KEY"] = config["jwtSecret"]
 jwt = JWTManager(app)
 
 Session(app)
 
 #conexao com banco de dados
-localPathFile = "./RPGdatabase.db"
-serverPathFile = "/home/v6cardoso/RPGdatabase.db"
-con = None
-if exists(localPathFile):
-    con = sqlite3.connect(localPathFile, check_same_thread=False)
-elif exists(serverPathFile):
-    con = sqlite3.connect(serverPathFile, check_same_thread=False)
+con = sqlite3.connect(config["dbPath"], check_same_thread=False)
 db = con.cursor()
 
 @app.after_request
@@ -79,7 +75,7 @@ def authenticate(username, password):
         return False
     return False
 
-@app.route("/generateToken", methods=["POST"])
+@app.route("/generateToken", methods=["GET", "POST"])
 @auth.login_required
 def generateToken():
     access_token = create_access_token(identity=auth.username())
