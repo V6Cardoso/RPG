@@ -42,8 +42,6 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-user = 'usuário'
-
 #Busca imagens salvas por cada usuario
 @app.route("/")
 @login_required
@@ -116,7 +114,7 @@ def adventure():
             if images == None:
                 return apology("coleção não encontrada", 400)
         keys = {'apiKey': data[0], 'pseId': data[1], "text": request.form.get("text")}
-        return render_template("adventure.html", user = user, keys=keys, images = images)
+        return render_template("adventure.html", user = session["user_name"], keys=keys, images = images)
 
 
 @app.route('/analysis', methods=["POST"])
@@ -141,7 +139,7 @@ def config():
         db.execute("SELECT apiKey, pseId FROM users_apikey WHERE user_id = ? ", [session["user_id"]])
         data = db.fetchone()
         keys = {'apiKey': data[0] if data != None else '', 'pseId': data[1] if data != None else ''}
-        return render_template("config.html", user = user, keys=keys)
+        return render_template("config.html", user = session["user_name"], keys=keys)
     
 @app.route("/demoMode", methods=["POST"])
 @login_required
@@ -172,12 +170,11 @@ def collection():
         con.commit()
     db.execute("SELECT * FROM users_images WHERE user_id = ?", [session["user_id"]])
     rows = db.fetchall()
-    return render_template("collection.html", user = user, images=rows)
+    return render_template("collection.html", user = session["user_name"], images=rows)
 
 #Controle de login
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    global user
     session.clear()
     if request.method == "POST":
 
@@ -188,13 +185,13 @@ def login():
             return apology("informar senha", 403)
 
         db.execute("SELECT * FROM users WHERE username = ?", [request.form.get("username")])
-        rows = db.fetchall()
+        rows = db.fetchone()
 
-        if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
+        if rows != None or not check_password_hash(rows[2], request.form.get("password")):
             return apology("login ou senha inválido", 403)
 
-        session["user_id"] = rows[0][0]
-        user = rows[0][1]
+        session["user_id"] = rows[0]
+        session["user_name"] = rows[1]
         return redirect("/")
 
     else:
@@ -237,7 +234,7 @@ def register():
 
 @app.route("/about")
 def about():
-    return render_template("about.html", user = user)
+    return render_template("about.html", user = session["user_name"])
 
 #Controle de erros
 @app.errorhandler(500)
