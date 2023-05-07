@@ -187,7 +187,7 @@ def login():
         db.execute("SELECT * FROM users WHERE username = ?", [request.form.get("username")])
         rows = db.fetchone()
 
-        if rows != None or not check_password_hash(rows[2], request.form.get("password")):
+        if rows == None or not check_password_hash(rows[2], request.form.get("password")):
             return apology("login ou senha inválido", 403)
 
         session["user_id"] = rows[0]
@@ -234,7 +234,7 @@ def register():
 
 @app.route("/about")
 def about():
-    return render_template("about.html", user = session["user_name"])
+    return render_template("about.html", user = session.get("user_name"))
 
 #Controle de erros
 @app.errorhandler(500)
