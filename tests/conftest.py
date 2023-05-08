@@ -1,30 +1,24 @@
-import pytest
+import pytest, sqlite3
 from flask import session
+
+import sys
+import os
+
+# Add the root directory of your Flask application to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from app import app
 
 @pytest.fixture()
-def app():
-    app = app()
-    app.config.update({
+def test_app():
+    test_app = app
+    test_app.config.update({
         "TESTING": True,
+        "LOGIN_DISABLED": True,
     })
-
-    # other setup can go here
-
-    yield app
-
-    # clean up / reset resources here
+    
+    yield test_app
 
 
 @pytest.fixture()
-def client(app):
-    return app.test_client()
-
-
-def test_access_session(client):
-    with client:
-        client.post("/auth/login", data={"username": "flask"})
-        # session is still accessible
-        assert session["user_id"] == 1
-
-    # session is no longer accessible
+def client(test_app):
+    return test_app.test_client()
