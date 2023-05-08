@@ -32,7 +32,7 @@ jwt = JWTManager(app)
 Session(app)
 
 #conexao com banco de dados
-con = sqlite3.connect(config["dbPath"], check_same_thread=False)
+con = sqlite3.connect("example.db", check_same_thread=False)
 db = con.cursor()
 
 @app.after_request
