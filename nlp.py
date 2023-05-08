@@ -1,8 +1,7 @@
 import json
 from spacy import load, displacy, explain
 
-config = json.load(open("home/v6cardoso/config.json"))
-nlp = load(config["spacyModulePath"])
+nlp = load('pt_core_news_lg')
 
 docLocal = nlp('localidade, lugar, lugares, vila, zona, região, localização, espaço, território, ambiente, bioma')
 
