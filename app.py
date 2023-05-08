@@ -1,5 +1,5 @@
 #requisição das dependencias
-import sqlite3, json
+import sqlite3, json, os
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
@@ -26,7 +26,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = config["jwtSecret"]
+app.config["JWT_SECRET_KEY"] = os.environ['JWT_SECRET'] or config.get("jwtSecret")
 jwt = JWTManager(app)
 
 Session(app)
