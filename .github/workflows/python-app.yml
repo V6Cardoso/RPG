@@ -36,8 +36,8 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Append jwt secret
       run: |
-        jq '.jwtSecret = $secret_value' home/v6cardoso/config.txt > tmp_config.txt
-        mv tmp_config.txt home/v6cardoso/config.txt
+        jq '.jwtSecret = $secret_value' home/v6cardoso/config.json > tmp_config.json
+        mv tmp_config.json home/v6cardoso/config.json
       env:
         secret_value: ${{ secrets.JWT_SECRET }}
 
