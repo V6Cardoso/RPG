@@ -26,7 +26,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.environ['JWT_SECRET'] or config.get("jwtSecret")
+app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET') or config.get("jwtSecret")
 jwt = JWTManager(app)
 
 Session(app)
