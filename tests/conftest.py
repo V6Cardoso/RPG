@@ -13,7 +13,7 @@ def test_app():
     test_app = app
     test_app.config.update({
         "TESTING": True,
-        "LOGIN_DISABLED": True,
+        #"LOGIN_DISABLED": True,
     })
     
     yield test_app
